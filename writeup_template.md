@@ -23,25 +23,24 @@ The goals / steps of this project are the following:
 
 ### 1. Describe your pipeline. As part of the description, explain how you modified the draw_lines() function.
 
-My pipeline consisted of 5 steps. First, I converted the images to grayscale, then I .... 
+My pipeline consisted of the following steps:
+- blur the image with a gaussian blur
+- transform the image to only edges using canny transform
+- black out pixels not in region of interest
+- detect line segments within the region of interest
+- split lines into two sections: left and right lane divider 
+For each bucket:
+- find the longest line
+- calculate slope and y-intercept
+- reform line within region of interest
+draw on copy of the original image
 
-In order to draw a single line on the left and right lanes, I modified the draw_lines() function by ...
-
-If you'd like to include images to show how the pipeline works, here is how to include an image: 
-
-![alt text][image1]
-
+I used the draw_lines() function in its original form and just passed in lines that I calculated.   
 
 ### 2. Identify potential shortcomings with your current pipeline
 
-
-One potential shortcoming would be what would happen when ... 
-
-Another shortcoming could be ...
-
+There are shortcomings on relying on the longest line to represent the entire lane divider.  The hough line produced lots of little lines instead of all encompassing larger ones.  The largest within a lane divider group might differ significantly from the orientation of the trend line.  This method also produced zero slope lines for a few frames in the video which required special handling.
 
 ### 3. Suggest possible improvements to your pipeline
 
-A possible improvement would be to ...
-
-Another potential improvement could be to ...
+The implementation could be improved by computing a weighted average of y-intercept and slope values based on line distance.  Instead of wholly relying on the longest line for its y-intercept and slope, each detected line would influence the output in proportion to its length.  This change would result in a more accurate portrayal of the overall trend line for each lane divider.
